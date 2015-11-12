@@ -1,6 +1,7 @@
 data_mat_list = {'condmat','intl-conflict','metabolic','nips_1-17','powergrid','prot-prot'};
 
 data_path_list = strcat('datasets/',data_mat_list,'.mat');
+output_path_list = strcat(data_mat_list,'.mat');
 
 bilinear_available = [false,true,true,false,false,true];
 
@@ -11,7 +12,7 @@ is_symmetric = [true,true,true,true,true,true];
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % running code for prot-prot
-data_index = 2;
+data_index = 6;
 disp(data_path_list{data_index});
 data_name = data_mat_list{data_index};
 data_path = data_path_list{data_index};
@@ -19,7 +20,7 @@ A = load(data_path_list{data_index});
 
 [m,~] = size(A.D);
 % latent feature
-k = 30;
+k = 10;
 
 % clean linear features if given
 if bilinear_available(data_index)
@@ -99,9 +100,9 @@ for a = 1:m
         end
     end
 end
-
+fprintf('done 3 loop');
 %%%%%%%%%%%%%%%%%%%%%%%%% SPLIT THE DATASET %%%%%%%%%
-TRAIN_RATIO = 0.8;
+TRAIN_RATIO = 0.4;
 I = randperm(size(D,2)); % finding a permutation of [1 2 ... m^2]
 ITr = I(1:ceil(TRAIN_RATIO * length(I))); % training indexes
 ITe = I(1+ceil(TRAIN_RATIO * length(I)):end); % testing indexes
@@ -171,13 +172,28 @@ for WHICH_OPTIMISATION = [ 1 2 ]
 
     PPred = 1./(1 + exp(-SPred)); % predicted probability
 
-    %%%%%%%%%%%%%% analyzing results %%%%%%%%%%%%%%%%%
-    testLinks = sub2ind(size(PPred), DTe(1,:), DTe(2,:));
-    X = (v(ITe)+1)/2;
-    Y = transpose(PPred(testLinks)) >= 0.5 ;
+    %%%%%%%%%%%%%% analyzing results %%%%%%%%%%%%%%%%
     
     
+    analyze_caller = analyze;
+    results = analyze_caller.get_results(PPred,GTrue,v,DTe,ITe);
+    
+    recall = results.recall;
+    precision = results.precision;
     
     fprintf('\nRecall = %1.4f Precision = %1.4f\n',recall,precision);
+
+    data_to_save = [];
+    data_to_save.results = results;
+    data_to_save.ITe = ITe;
+    data_to_save.PPred = PPred;
+    data_to_save.v = v;
+    data_to_save.DTe = DTe;
+    data_to_save.GTrue = GTrue;
+    
+    save(strcat('output/',int2str(WHICH_OPTIMISATION),'_',output_path_list{data_index}),'data_to_save');
+    
+    
+
 end
 

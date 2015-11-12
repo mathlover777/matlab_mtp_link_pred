@@ -1,18 +1,20 @@
-data_mat_list = {'condmat','intl-conflict','metabolic','nips_1-17','powergrid','prot-prot'};
+data_mat_list = {'condmat','intl-conflict','metabolic','nips_1-17','powergrid','prot-prot','webkb','cora'};
 
 data_path_list = strcat('datasets/',data_mat_list,'.mat');
 output_path_list = strcat(data_mat_list,'.mat');
 
-bilinear_available = [false,true,true,false,false,true];
+bilinear_available = [false,true,true,false,false,true,true,true];
 
-pair_available = [false,true,false,false,false,false];
-is_symmetric = [true,true,true,true,true,true];
+pair_available = [false,true,false,false,false,false,false,false];
+is_symmetric = [true,true,true,true,true,true,true,true];
 
 
+
+%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % running code for prot-prot
-data_index = 6;
+data_index = 8;
 disp(data_path_list{data_index});
 data_name = data_mat_list{data_index};
 data_path = data_path_list{data_index};

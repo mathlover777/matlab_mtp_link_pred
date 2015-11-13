@@ -1,12 +1,12 @@
-data_mat_list = {'condmat','intl-conflict','metabolic','nips_1-17','powergrid','prot-prot','webkb','cora'};
+data_mat_list = {'condmat','intl-conflict','metabolic','nips_1-17','powergrid','prot-prot','webkb','cora','Movielens'};
 
 data_path_list = strcat('datasets/',data_mat_list,'.mat');
 output_path_list = strcat(data_mat_list,'.mat');
 
-bilinear_available = [false,true,true,false,false,true,true,true];
+bilinear_available = [false,true,true,false,false,true,true,true,true];
 
-pair_available = [false,true,false,false,false,false,false,false];
-is_symmetric = [true,true,true,true,true,true,true,true];
+pair_available = [false,true,false,false,false,false,false,false,false];
+is_symmetric = [true,true,true,true,true,true,true,true,true];
 
 
 
@@ -14,7 +14,7 @@ is_symmetric = [true,true,true,true,true,true,true,true];
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % running code for prot-prot
-data_index = 8;
+data_index = 7;
 disp(data_path_list{data_index});
 data_name = data_mat_list{data_index};
 data_path = data_path_list{data_index};
@@ -22,7 +22,7 @@ A = load(data_path_list{data_index});
 
 [m,~] = size(A.D);
 % latent feature
-k = 10;
+k = 300;
 
 % clean linear features if given
 if bilinear_available(data_index)
@@ -104,7 +104,7 @@ for a = 1:m
 end
 fprintf('done 3 loop');
 %%%%%%%%%%%%%%%%%%%%%%%%% SPLIT THE DATASET %%%%%%%%%
-TRAIN_RATIO = 0.4;
+TRAIN_RATIO = 0.8;
 I = randperm(size(D,2)); % finding a permutation of [1 2 ... m^2]
 ITr = I(1:ceil(TRAIN_RATIO * length(I))); % training indexes
 ITe = I(1+ceil(TRAIN_RATIO * length(I)):end); % testing indexes
